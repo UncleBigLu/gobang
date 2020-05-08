@@ -15,6 +15,7 @@ chess_arr = []
 color = True  # true for black chess, false for white chess
 gamestate = 0 # 0:game running 1: black win 2: white win
 
+
 def chess_count(chess,dir):
     x = chess[0]
     y = chess[1]
@@ -38,30 +39,31 @@ def chess_count(chess,dir):
 
 # main
 while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            exit()
+    event = pygame.event.wait()
+    if event.type == pygame.QUIT:
+        pygame.quit()
+        exit()
 
-        if event.type == pygame.MOUSEBUTTONDOWN and gamestate == 0:
-            x, y = pygame.mouse.get_pos()  # 获取鼠标位置
-            xi = int(round((x - space) / cell_lenth))  # 获取到x方向上取整的序号
-            yi = int(round((y - space) / cell_lenth))  # 获取到y方向上取整的序号
-            if 0 <= xi <= cell_num \
-                    and 0 <= yi <= cell_num and \
-                    (xi, yi, True) not in chess_arr and (xi, yi, False) not in chess_arr:
-                chess = (xi, yi, color)
-                chess_arr.append(chess)
+    if event.type == pygame.MOUSEBUTTONDOWN and gamestate == 0:
+        x, y = pygame.mouse.get_pos()  # 获取鼠标位置
+        xi = int(round((x - space) / cell_lenth))  # 获取到x方向上取整的序号
+        yi = int(round((y - space) / cell_lenth))  # 获取到y方向上取整的序号
+        if 0 <= xi <= cell_num \
+                and 0 <= yi <= cell_num and \
+                (xi, yi, True) not in chess_arr and (xi, yi, False) not in chess_arr:
+            chess = (xi, yi, color)
+            chess_arr.append(chess)
 
-                # count chess number in each direction
-                dir = [ [(1,0), (-1,0)], [(0,1), (0,-1)], [(1,1), (-1,-1)], [(1,-1), (-1,1)] ]
-                for d in dir:
-                    if chess_count(chess, d[0]) + chess_count(chess, d[1]) >= 4:
-                        if color == True:
-                            gamestate = 2
-                        else:
-                            gamestate = 1
-                color = not color
+            # count chess number in each direction
+            dir = [[(1, 0), (-1, 0)], [(0, 1), (0, -1)], [(1, 1), (-1, -1)], [(1, -1), (-1, 1)]]
+            for d in dir:
+                if chess_count(chess, d[0]) + chess_count(chess, d[1]) >= 4:
+                    if color == True:
+                        gamestate = 2
+                    else:
+                        gamestate = 1
+            color = not color
+
 
     # paint chess board
     screen.fill((209, 162, 89))  # set the interface to brown
